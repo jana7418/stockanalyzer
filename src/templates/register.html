@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="row justify-content-md-center">
+
+    <div class="col-md-5">
+        <form action="register" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>email</label>
+            <input type="email" class="form-control" name="email" value="{{ request.POST.email }}" required>
+        </div>
+        <div class="form-group">
+            <label>username</label>
+            <input type="text" class="form-control" name="username" value="{{ request.POST.username }}" required>
+        </div>
+        <div class="form-group">
+            <label>password</label>
+            <input type="password" class="form-control" name="password" required>
+        </div>
+        <div class="form-group">
+            <label>confirm password</label>
+            <input type="password" class="form-control" name="password_confirm" required>
+        </div>
+        <button type="submit" class="btn btn-primary">register</button>
+        </form>    
+    </div>
+</div>
+{% endblock body %}

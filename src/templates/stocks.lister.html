@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+    {% block header %}
+    <link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css'%}">
+    {% endblock header %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label>Filter by Index</label>
+                <select class="form-control" id="index_option">
+                {% for index in indexes %}
+                    <option value="{{ index.id }}">{{ index.Name }}</option>
+                {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="checkbox mt-5">
+                <label><input type="checkbox" value="" id="refresh"> Refresh data every 30 secs</label>
+            </div>
+        </div>
+    </div>
+
+    <table id="table" class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Symbol</th>
+                <th scope="col">Buy Quantity</th>
+                <th scope="col">Sell Quantity</th>
+                <th scope="col">% difference</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Symbol</th>
+                <th>Buy Quantity</th>
+                <th>Sell Quantity</th>
+                <th>% difference</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for stock in stocks %}
+                <tr id="{{stock.Symbol}}_row">
+                    <td id="{{stock.Symbol}}_symbol">{{ stock.Symbol }}</td>         
+                    <td id="{{stock.Symbol}}_buy">-</td>
+                    <td id="{{stock.Symbol}}_sell">-</td>
+                    <td id="{{stock.Symbol}}_percent">-</td>
+                </tr>
+            {% endfor %}        
+        </tbody>
+    </table>
+{% endblock body %}
+
+    {% block scripts %}    
+    <script src="{% static 'js/jquery.dataTables.min.js'%}"></script>
+    <script src="{% static 'js/app.js'%}"></script>
+    {% endblock scripts %}
