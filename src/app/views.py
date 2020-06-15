@@ -33,14 +33,16 @@ def get_stock_view_data(stock : Stock):
     data['symbol'] = stock.Symbol
     data['exchange'] = stock.Exchange
     livedata = stock.get_buy_sell_quantity()
+    nse = NSELiveAPI(stock.Symbol)
+    data['quote'] = nse.get_live_data()
     
     buy = int(livedata.get('buy')) if livedata.get('buy') is not None else 0
     sell = int(livedata.get('sell')) if livedata.get('sell') is not None else 0
 
-    percent = ((buy - sell) / 1 if sell == 0 else sell ) * 100
+    percent = ((buy - sell) / sell if sell != 0 else 1 ) * 100
     data['data'] = {
         'quantity' : livedata,
-        'percent' : percent,
+        'percent' : round(percent),
         'percent_cell_colour' : 'bg-success' if buy > sell else 'bg-danger',
     }
         

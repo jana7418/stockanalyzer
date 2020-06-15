@@ -13,7 +13,7 @@ $(document).ready(function () {
     //Set a event listner for refresh checkbox change
     $("#refresh").click(function () {
         if ($(this).prop("checked") == true) {
-            window.refreshCheckbox = setInterval(fetchQuotes, 30000);
+            window.refreshCheckbox = setInterval(fetchQuotes, 30000, $("#index_option").val());
         } else if ($(this).prop("checked") == false) {
             clearInterval(window.refreshCheckbox);
         }
@@ -23,37 +23,44 @@ $(document).ready(function () {
 
 function fetchQuotes(index) {
     var api = "/api/get";
-    $.ajax({
-        url: api + '/index/' + index, success: function (obj) {
-            obj.symbols.forEach(symbol => {
-                var quote_url = api + '/stock/' + symbol;
-                $.ajax({
-                    url: quote_url,
-                    success: function (quote) {
-                        updateRow(symbol, quote)
-                    }
-                })
-            });
-        }
-    });
+    if(index){
+        $.ajax({
+            url: api + '/index/' + index, 
+            success: obj => {
+                obj.symbols.forEach(symbol => {
+                    var quote_url = api + '/stock/' + symbol;
+                    $.ajax({
+                        url: quote_url,
+                        success: function (quote) {
+                            updateRow(symbol, quote)
+                        }
+                    })
+                });
+            }
+        });
+    }    
 }
 
 function updateRow(symbol, quote) {
+    var tableRow = $("#" + quote.symbol + "_row");
+    var table = $('#table').DataTable();
+    var rowObj = table.row(tableRow);
+    var initialData = rowObj.data();
     var data = [
-        symbol,
+        initialData[0],
+        quote.quote.priceInfo.lastPrice ? quote.quote.priceInfo.lastPrice : 0,
         quote.data.quantity.buy ? quote.data.quantity.buy : 0,
         quote.data.quantity.sell ? quote.data.quantity.sell : 0,
         ( quote.data.percent ? quote.data.percent : '0.00' ) + ' %',
     ];
-    var tableRow = $("#" + quote.symbol + "_row");
+    $("#" + quote.symbol + "_percent").removeClass();
     $("#" + quote.symbol + "_percent").addClass(quote.data.percent_cell_colour);
-    var table = $('#table').DataTable();
-    table.row(tableRow).data(data).draw();
+    rowObj.data(data).draw();
 }
 
 function buildTable() {
     $('#table').DataTable({
-        "order": [[3, "desc"]],
+        "order": [[4, "desc"]],
         "paging": false
     });
 }

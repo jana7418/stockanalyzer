@@ -10,6 +10,7 @@ class NSELiveAPI:
     API_BASE_URL = 'https://www.nseindia.com/api/'
     API_QUOTE = 'quote-equity?symbol='
     API_SECTION = '&section=trade_info'
+    API_DIRECT_QUOTE = 'https://www.nseindia.com/get-quotes/equity?symbol='
 
     API_HEADERS = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
@@ -56,3 +57,6 @@ class NSELiveAPI:
             return data.get('marketDeptOrderBook')
         else:
             return {}
+
+    def get_direct_link(self):
+        return self.API_DIRECT_QUOTE + self.symbol

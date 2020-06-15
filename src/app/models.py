@@ -6,8 +6,12 @@ from django.http import HttpResponse, request
 class Index(models.Model):
     name = models.CharField(max_length=100, name='Name', null=False, unique=True)
 
+    class Meta:
+        verbose_name_plural = 'Indexes'
+        
     def __str__(self):
         return (self.Name)
+    
 
 class Stock(models.Model):
     EXCHANGES = (
@@ -29,7 +33,6 @@ class Stock(models.Model):
 
     def get_buy_sell_quantity(self):
         orderbook = self.nse().get_order_book()
-        print(orderbook)
         if orderbook is not None:
             ret = {
                 'buy' : orderbook.get('totalBuyQuantity'),
